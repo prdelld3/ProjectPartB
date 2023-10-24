@@ -123,7 +123,7 @@ namespace ProjectPartB_B2
         private bool IsFourOfAKind => false;
         private bool IsFullHouse => false;
         private bool IsFlush => IsSameColor(out _rankHigh);
-        private bool IsStraight => false;
+        private bool IsStraight => IsConsecutive(out _rankHigh);
         private bool IsThreeOfAKind => false;
         private bool IsTwoPair
         {
