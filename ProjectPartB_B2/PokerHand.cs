@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ProjectPartB_B2
 {
@@ -28,49 +29,7 @@ namespace ProjectPartB_B2
         public PlayingCard RankHiCardPair1 => _rankHighPair1;
         public PlayingCard RankHiCardPair2 => _rankHighPair2;
 
-        //Hint: Worker Methods to examine a sorted hand
-        private int NrSameValue(int firstValueIdx, out int lastValueIdx, out PlayingCard HighCard)
-        {
-            if (Count <= 0)
-            {
-                HighCard = null;
-                firstValueIdx = lastValueIdx = 0;
-                return 0;
-            }
-
-            int maxNrSameValue = 0;
-            int nrConsecutiveValues = 0;
-
-            HighCard = cards[0];
-            lastValueIdx = 0;
-
-            for (int i = firstValueIdx; i < Count; i++)
-            {
-                if (cards[i].Value == HighCard.Value)
-                {
-                    nrConsecutiveValues++;
-                    if (nrConsecutiveValues > maxNrSameValue)
-                    {
-                        HighCard = cards[i];
-                        maxNrSameValue = nrConsecutiveValues;
-                        lastValueIdx = i;
-                    }
-                }
-                else if (nrConsecutiveValues <= 1)
-                {
-                    //Shift Value one card and check for new sequence
-                    HighCard = cards[i];
-                    firstValueIdx = i;
-                    nrConsecutiveValues = 1;
-                }
-                else
-                {
-                    //found a sequence
-                    return maxNrSameValue;
-                }
-            }
-            return maxNrSameValue;
-        }
+        //Hint: Somer Helpers to examine a sorted hand
         private bool IsSameColor(out PlayingCard HighCard)
         {
             if (Count <= 0)
@@ -116,6 +75,38 @@ namespace ProjectPartB_B2
             return true;
         }
 
+        //Hint: Somer Helpers to examine a hand for color and value occurances
+        private Dictionary<PlayingCardValue, int> NrOfValueOccurances()
+        {
+            //Check number of occurnaces of a value in the pokerhand
+            Dictionary<PlayingCardValue, int> occurances = new Dictionary<PlayingCardValue, int>();
+            foreach (var item in cards)
+            {
+                //try to see if it can be added, only the first time works
+                if (!occurances.TryAdd(item.Value, 1))
+                {
+                    //already exists, simply imcrement the value
+                    occurances[item.Value]++;
+                }
+            }
+            return occurances;
+        }
+        private Dictionary<PlayingCardColor, int> NrOfColorOccurances()
+        {
+            //Check number of occurnaces of a value in the pokerhand
+            Dictionary<PlayingCardColor, int> occurances = new Dictionary<PlayingCardColor, int>();
+            foreach (var item in cards)
+            {
+                //try to see if it can be added, only the first time works
+                if (!occurances.TryAdd(item.Color, 1))
+                {
+                    //already exists, simply imcrement the value
+                    occurances[item.Color]++;
+                }
+            }
+            return occurances;
+        }
+
 
         //Hint: Worker Properties to examine each rank
         private bool IsRoyalFlush => false;
@@ -129,13 +120,26 @@ namespace ProjectPartB_B2
         {
             get
             {
+                var _valuecount = NrOfValueOccurances();
+                var _colorcount = NrOfColorOccurances();
                 return false;
             }
         }
-        private bool IsPair => (NrSameValue(0, out _, out _rankHigh) == 2);
+        private bool IsPair
+        {
+            get
+            {
+                var _valuecount = NrOfValueOccurances();
+                var _colorcount = NrOfColorOccurances();
+                return false;
+            }
+        }
 
         public PokerRank DetermineRank()
         {
+            var _valuecount = NrOfValueOccurances();
+            var _colorcount = NrOfColorOccurances();
+
             return PokerRank.Unknown;
         }
 
