@@ -74,6 +74,49 @@ namespace ProjectPartB_B2
             HighCard = Highest;
             return true;
         }
+        private int NrSameValue(int firstValueIdx, out int lastValueIdx, out PlayingCard HighCard)
+        {
+            if (Count <= 0)
+            {
+                HighCard = null;
+                firstValueIdx = lastValueIdx = 0;
+                return 0;
+            }
+
+            int maxNrSameValue = 0;
+            int nrConsecutiveValues = 0;
+
+            HighCard = cards[0];
+            lastValueIdx = 0;
+
+            for (int i = firstValueIdx; i < Count; i++)
+            {
+                if (cards[i].Value == HighCard.Value)
+                {
+                    nrConsecutiveValues++;
+                    if (nrConsecutiveValues > maxNrSameValue)
+                    {
+                        HighCard = cards[i];
+                        maxNrSameValue = nrConsecutiveValues;
+                        lastValueIdx = i;
+                    }
+                }
+                else if (nrConsecutiveValues <= 1)
+                {
+                    //Shift Value one card and check for new sequence
+                    HighCard = cards[i];
+                    firstValueIdx = i;
+                    nrConsecutiveValues = 1;
+                }
+                else
+                {
+                    //found a sequence
+                    return maxNrSameValue;
+                }
+            }
+            return maxNrSameValue;
+        }
+
 
         //Hint: Somer Helpers to examine a hand for color and value occurances
         private Dictionary<PlayingCardValue, int> NrOfValueOccurances()
