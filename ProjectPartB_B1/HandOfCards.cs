@@ -8,24 +8,57 @@ namespace ProjectPartB_B1
 {
     class HandOfCards : DeckOfCards, IHandOfCards
     {
+        public List<PlayingCard> playersHand = new List<PlayingCard>();
+        public int score{get; set;}
+
         #region Pick and Add related
         public void Add(PlayingCard card)
-        { }
-        #endregion
+        { 
+            playersHand.Add(card);
+        }
 
+        public void Score()
+        {
+            score++;
+        
+        }
+        #endregion
+         public IEnumerable<PlayingCard> Hand => playersHand.AsReadOnly();
         #region Highest Card related
         public PlayingCard Highest
         {
             get
-            {
-               return null;
+            { 
+                if(playersHand.Count == 0)
+                    return null;
+
+                PlayingCard first = null;
+                
+                foreach (var playingCard in playersHand.OrderBy(card => card.Value))
+                {
+                    first = playingCard;
+                   
+                }
+                return first;
+                
             }
          }
         public PlayingCard Lowest
         {
             get
-            {
-               return null;
+            { 
+                if(playersHand.Count == 0)
+                    return null;
+
+                PlayingCard first = null;
+                
+                foreach (var playingCard in playersHand.OrderByDescending(card => card.Value))
+                {
+                    first = playingCard;
+                   
+                }
+                return first;
+                
             }
         }
         #endregion

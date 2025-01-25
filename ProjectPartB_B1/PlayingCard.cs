@@ -18,19 +18,33 @@ namespace ProjectPartB_B1
 			return 0;
         }
 		#endregion
+		public PlayingCard(PlayingCardColor color, PlayingCardValue value)
+		{
+			Color = color;
+			Value = value;
+		}
 
         #region ToString() related
 		string ShortDescription
 		{
-			//Use switch statment or switch expression
-			//https://en.wikipedia.org/wiki/Playing_cards_in_Unicode
 			get
-			{
-				return "Short Description of the card";
+			{ 
+				string symbol = Color switch 
+				{ 
+					 PlayingCardColor.Clubs => "♣ ",
+					 PlayingCardColor.Diamonds => "♦ ",
+					 PlayingCardColor.Hearts => "♥ ",
+					 PlayingCardColor.Spades => "♠ ",
+					_ => throw new NotImplementedException() 
+				}; 
+				
+				return $"{symbol}";
 			}
 		}
 
-		public override string ToString() => ShortDescription;
+		public override string ToString() => $"{ShortDescription} {Value} ";
         #endregion
+
+	
     }
 }
